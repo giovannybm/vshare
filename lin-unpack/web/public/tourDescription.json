@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "header",
+  "steps": [
+    {
+      "title": "License Server Overview",
+      "target": "header",
+      "placement": "bottom",
+      "content": "You can see the current status of the license server at a glance.",
+      "xOffset": "center",
+      "arrowOffset": "center"
+    },
+    {
+      "title": "Logo (Link)",
+      "target": "logo",
+      "placement": "bottom",
+      "content": "You can use the logo to navigate back to the main screen."
+    },
+    {
+      "title": "Server Version",
+      "target": "version",
+      "placement": "bottom",
+      "content": "License server version is displayed here. It is a good idea to keep it up-to-date."
+    },
+    {
+      "title": "Username",
+      "target": "userName",
+      "yOffset": -10,
+      "placement": "left",
+      "content": "Your username is displayed here."
+    },
+    {
+      "title": "Machine Name",
+      "target": "siteName",
+      "yOffset": -10,
+      "placement": "left",
+      "content": "This is the name of the license server machine. It defaults to the machine hostname but you can change it by clicking on it."
+    },
+    {
+      "title": "Online service",
+      "target": "#online-status-dropdown",
+      "xOffset": -40,
+      "arrowOffset": 50,
+      "placement": "bottom",
+      "content": "<p>This indicator shows the state of the online licensing service:</p><span class='status-icon status-icon-ok'></span><div class='inline'> - The online licensing service is up and running.</div><br /><span class='status-icon status-icon-warning'></span><div class='inline'> - This license server is not connected to V-Ray's main license server.</div><br /><span class='status-icon status-icon-disabled'></span> <div class='inline'> - Online licensing service is disabled.</div>"
+    },
+    {
+      "title": "Offline service",
+      "target": "#offline-status-dropdown",
+      "xOffset": -140,
+      "arrowOffset": 150,
+      "placement": "bottom",
+      "content": "<p>This indicator shows the state of the borrowed licenses:</p><span class='status-icon status-icon-ok'></span><div class='inline'> - You have borrowed licenses for offline usage.</div><br /><span class='status-icon status-icon-disabled'></span><div class='inline'> - You have not borrowed licenses for offline usage.</div>"
+    },
+    {
+      "title": "Dongle",
+      "target": "#dongle-status-dropdown",
+      "xOffset": -190,
+      "arrowOffset": 200,
+      "placement": "bottom",
+      "content": "<p>This indicator shows the state of the dongle licensing service:</p><span class='status-icon status-icon-ok'></span><div class='inline'> - Dongle licensing service is up and running and dongle is connected.</div><br /><span class='status-icon status-icon-warning'></span><div class='inline'> - Dongle licensing service is enabled but a dongle is not connected.</div><br /><span class='status-icon status-icon-disabled'></span><div class='inline'> - Dongle licensing service is disabled.</div>"
+    },
+    {
+      "title": "Product List",
+      "target": "product-list",
+      "arrowOffset": "center",
+      "xOffset": "center",
+      "placement": "top",
+      "content": "All your licensed products are displayed here. Click on a product to see detailed information about available licenses and current usage."
+    }
+  ]
+}

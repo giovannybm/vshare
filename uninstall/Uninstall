@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# This is a shortcut, created by the Chaos Installer.
+
+cd "/usr/ChaosGroup/VRLService/OLS/uninstall"
+/usr/ChaosGroup/VRLService/OLS/uninstall/installer -uninstallApp="V-Ray Online License Server" -log="/usr/ChaosGroup/VRLService/OLS/uninstall/install.log"

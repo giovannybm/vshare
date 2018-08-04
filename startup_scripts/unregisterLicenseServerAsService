@@ -1,0 +1,113 @@
+#!/bin/bash
+
+VROL_NAME="V-Ray Online License Server"
+
+INIT_DAEMON=$(ps -p 1 -o comm | sed -n 2p)
+if [ "$INIT_DAEMON" = "init" ]; then
+	if [ $(initctl --version | grep -q upstart) ]; then
+		# Init system is SystemV
+		service vrlsvcctl stop
+
+		if [ ! -e "/etc/init.d/vrlsvcctl" ]; then
+			echo "The $VROL_NAME is not registered as service on this system!"
+			exit 1
+		fi
+
+		if [ -w "/etc/init.d" ]; then
+			echo "Stopping $VROL_NAME"
+			service vrlsvcctl stop
+
+			echo "Unregistering the $VROL_NAME as service"
+			#Remove the deamon script to the init daemons
+			rm /etc/init.d/vrlsvcctl
+
+			#Remove the symlinks for rc
+			rm /etc/rc0.d/K55vrlservice
+			rm /etc/rc1.d/K55vrlservice
+			rm /etc/rc2.d/S55vrlservice
+			rm /etc/rc3.d/S55vrlservice
+			rm /etc/rc4.d/S55vrlservice
+			rm /etc/rc5.d/S55vrlservice
+			rm /etc/rc6.d/K55vrlservice
+
+			exit 0
+
+		else
+			echo "You have to run the unregister script with 'sudo' or as root!"
+			exit 1
+		fi
+	else
+		# Init system is Upstart
+
+		# Check for legacy service installations, which did not support both
+		# Upstart and SystemV service types and only installed services as SystemV
+		if [ -e "/etc/init.d/vrlsvcctl" ]; then
+			if [ -w "/etc/init.d" ]; then
+				# stop it first
+				echo "Stopping legacy License server service"
+				service vrlsvcctl stop
+
+				echo "Unregistering legacy License server as service"
+
+				rm /etc/init.d/vrlsvcctl
+
+				#Remove the symlinks for rc
+				rm /etc/rc0.d/K55vrlservice
+				rm /etc/rc1.d/K55vrlservice
+				rm /etc/rc2.d/S55vrlservice
+				rm /etc/rc3.d/S55vrlservice
+				rm /etc/rc4.d/S55vrlservice
+				rm /etc/rc5.d/S55vrlservice
+				rm /etc/rc6.d/K55vrlservice
+
+			else
+				echo "You have to run the unregister script with 'sudo' or as root!"
+				exit 1
+			fi
+		fi
+
+		if [ ! -e "/etc/init/vrlservice.conf" ]; then
+			echo "The $VROL_NAME is not registered as service on this system!"
+			exit 1
+		fi
+
+		if [ -w "/etc/init" ]; then
+
+			echo "Stopping $VROL_NAME"
+			stop vrlservice
+
+			echo "Unregistering the $VROL_NAME as service"
+			#Remove the deamon script to the init daemons
+			rm /etc/init/vrlservice.conf
+
+			exit 0
+
+		else
+			echo "You have to run the unregister script with 'sudo' or as root!"
+			exit 1
+		fi
+	fi
+elif [ "$INIT_DAEMON" = "systemd" ]; then
+	if [ ! -e "/etc/systemd/system/vrlservice.service" ]; then
+		echo "The $VROL_NAME is not registered as service on this system!"
+		exit 1
+	fi
+
+	if [ -w "/etc/systemd/system" ]; then
+		echo "Unregistering the $VROL_NAME as service"
+		#disable the service through the systemctl tool
+		systemctl stop vrlservice.service
+		systemctl disable vrlservice.service
+
+		#delete the deamon configuration for systemd
+		rm /etc/systemd/system/vrlservice.service
+
+		exit 0
+	else
+		echo "You have to run the unregister script with 'sudo' or as root!"
+		exit 1
+	fi
+else
+	echo "ERROR: Unsupported init system! Unable to unregister the $VROL_NAME as service!"
+	exit 1
+fi

@@ -1,0 +1,16 @@
+[Unit]
+Description=V-Ray Online License server
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+Environment=OLS_HOME=[$CHAOS_INSTALL_ORIGINAL_HOME]
+WorkingDirectory=[STDROOT]
+ExecStart=[STDROOT]/vrol.bin
+TimeoutSec=2
+User=[$CHAOS_INSTALL_ORIGINAL_USER_NAME]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

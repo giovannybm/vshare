@@ -1,0 +1,19 @@
+{
+	"local": {
+		"vrolHost": "0.0.0.0",
+		"vrolPort": 30304,
+		"dongleEnabled": true,
+		"vrlPort": 30314
+	},
+	"portal": "https://ols.chaosgroup.com",
+	"diagnostics": {
+		"level": "debug"
+	},
+	"proxy": {
+		"host": "",
+		"port": 0,
+		"type": "none",
+		"username": "",
+		"password": ""
+	}
+}

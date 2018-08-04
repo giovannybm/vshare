@@ -1,0 +1,1 @@
+[STDROOT]/vrol.bin [STDROOT]/vrol.nar/vrlctl.js --ols_home "[$CHAOS_INSTALL_ORIGINAL_HOME]" "$@"

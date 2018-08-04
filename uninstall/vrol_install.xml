@@ -1,0 +1,488 @@
+<ChaosGroupInstallation>
+
+	<ProductDesc>
+		<Fullname>V-Ray Online License Server</Fullname>
+		<MajorVersion>4</MajorVersion>
+		<MinorVersion>4</MinorVersion>
+		<MinestVersion>1</MinestVersion>
+		<Website>https://docs.chaosgroup.com/display/LICENSE/Online+Licensing</Website>
+		<Supportemail>support@chaosgroup.com</Supportemail>
+		<LicenseAlias>LicenseText</LicenseAlias>
+		<InstallHelpURL>https://docs.chaosgroup.com/display/LICENSE/Online+Licensing</InstallHelpURL>
+		<LegacyApplication>V-Ray License Server for linux_x64</LegacyApplication>
+		<LegacyApplication>V-Ray License Server for linux_x86</LegacyApplication>
+	</ProductDesc>
+
+	<System><GUID>82415442-EFB6-4149-B13B-1254B447F865</GUID></System>
+
+	<Dialogs>
+		<WelcomeAndLicense w="750" h="521">
+			<Image x="0" y="0" w="163" h="-70">WelcomeLImg</Image>
+			<Text x="180" y="10" w="-20" h="20" HAlign="left" VAlign="top">Welcome to the installation of V-Ray Online License Server.</Text>
+			<RichEditText  Condition="[GUI_INSTALL]==1" x="180" y="35" w="-20" h="-141" HAlign="left" Details="ChaosMarkdown">LicenseText</RichEditText>
+			<PlainEditText Condition="[GUI_INSTALL]==0" x="180" y="35" w="-20" h="-141" HAlign="left" Details="ChaosMarkdown">LicenseText</PlainEditText>
+			<Text x="180" y="131" w="-20" h="18" HAlign="left" VAlign="bottom">All the registered trademarks and copyrights belong to their respective owners.</Text>
+			<Text x="180" y="113" w="-20" h="18" HAlign="left" VAlign="bottom">V-Ray is a registered trademark of Chaos Software Ltd. in Bulgaria and/or other countries.</Text>
+			<Text x="180" y="95" w="-20" h="18" HAlign="left" VAlign="bottom">This installation uses the zlib library (http://www.zlib.org)</Text>
+			<HLine x="1" y="70" w="-1" h="1" VAlign="bottom"></HLine>
+			<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">I &amp;Disagree</Button>
+			<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" DialogShift="+1" Default="1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">I &amp;Agree</Button>
+
+			<Trigger EvaluateOn="Set" Type="FileCheck" Variable="OLS_ACTIVATION_CERT" Value="[OLS_CONFIG_DIR]/ssl/cert.crt"/>
+			<Trigger EvaluateOn="Set" Condition="'[OLS_ACTIVATION_CERT]'!='not_found';[GUI_INSTALL]==0" Variable="RUN_ACTIVATION" Value="0"/>
+		</WelcomeAndLicense>
+
+		<InstallationDialog Special="HasSubDialogs" w="750" h="521">
+			<Image x="0" y="0" w="749" h="58">Header</Image>
+			<TaskLB Name="TaskList" x="10" y="65" w="205" h="-80" HAlign="left" VAlign="top" Details="size=18"></TaskLB>
+			<HLine x="1" y="70" w="-1" h="1" VAlign="bottom" FgColour="474747"></HLine>
+			<TaskList>
+				<License FinishLabel="License Terms" CurrentLabel="License Terms"/>
+				<CurrentInstallParameters FinishLabel="Current installation parameters" CurrentLabel="Current installation parameters"/>
+				<Settings FinishLabel="Customize" CurrentLabel="Customize"/>
+				<RunningApps FinishLabel="Checked for running applications" CurrentLabel="Checking for running applications..." UnreachedLabel="Check for running applications"/>
+				<Uninstall ShowCondition="[PREVIOUSINSTALLATION]==1;[LEGACY_INSTALLATION]==1" FinishLabel="Uninstalled old version" CurrentLabel="Uninstalling old version..." UnreachedLabel="Uninstall old version"/>
+				<UninstallationError ShowCondition="0" CurrentLabel="Error"/>
+				<RevertUninstallation ShowCondition="0" CurrentLabel="Reverting uninstallation..." FinishLabel="Reverted uninstallation" UnreachedLabel="Revert Unnstallation"/>
+				<UninstallBadFinish ShowCondition="0" CurrentLabel="Finish"/>
+
+				<CopyProgress FinishLabel="License server installed" CurrentLabel="License server installing..." UnreachedLabel="License server install"/>
+				<InstallationError ShowCondition="0" CurrentLabel="Error"/>
+				<RevertInstallation ShowCondition="0" CurrentLabel="Reverting installation..." FinishLabel="Reverted installation" UnreachedLabel="Revert Installation"/>
+				<RegisterApplication FinishLabel="Application registered" CurrentLabel="Register as a service" UnreachedLabel="Register as a service"/>
+				<ActivationQuery ShowCondition="'[OLS_ACTIVATION_CERT]'=='not_found',[GUI_INSTALL]!=0" EnableCondition="[RUN_ACTIVATION]!=0" CurrentLabel="Activate" FinishLabel="Activate"/>
+				<ActivationDialog ShowCondition="0" CurrentLabel="Activating"/>
+				<Finish CurrentLabel="Finished" UnreachedLabel="Finish"/>
+				<PostInstall ShowCondition="0"/>
+				<BadFinish ShowCondition="0"/>
+			</TaskList>
+			<SubDialogs>
+
+				<License Special="AutoNext"></License>
+
+				<CurrentInstallParameters>
+					<Field x="230" y="65" Type="InstallParameter" Label="License server directory:" Content="Directory" ValidationVariable="DIRECTORY_VALID">STDROOT</Field>
+					<Field x="230" Condition="'[OLS_ACTIVATION_CERT]'=='not_found'" Type="InstallParameter" Label="Activate during installation:" Content="CheckBox" Description="Activates the License server during the installation">RUN_ACTIVATION</Field>
+					<Field x="230" Condition="'[OLS_ACTIVATION_CERT]'!='not_found'" Type="InstallParameter" Label="Activate during installation:" Content="Info" Description="Already activated" Tooltip="License server may be reactivated with different user from its web page.">RUN_ACTIVATION</Field>
+
+					<Text x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText" Condition="[GUI_INSTALL]==1,[DIRECTORY_VALID]==0">Directory field is empty!</Text>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="110" w="80" h="30" HAlign="right" VAlign="bottom" Action="[CUSTOMIZE]='1'" DialogShift="+1">C&amp;ustomize</Button>
+					<Button x="190" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Action="Help">&amp;Help</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" Default="1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Install Now</Button>
+					<Text Condition="[PREVIOUSINSTALLATION]==1,[LEGACY_INSTALLATION]==0" x="220" y="49" w="-200" h="30" HAlign="left" VAlign="bottom">Previous installation was detected.\nProceeding will uninstall previous installation.</Text>
+					<Text Condition="[PREVIOUSINSTALLATION]==0,[LEGACY_INSTALLATION]==1" x="220" y="49" w="-200" h="30" HAlign="left" VAlign="bottom">Installation of old products was detected.\nProceeding will uninstall old version.</Text>
+					<Text Condition="[PREVIOUSINSTALLATION]==1,[LEGACY_INSTALLATION]==1" x="220" y="49" w="-200" h="30" HAlign="left" VAlign="bottom">Previous installation and old server were detected.\nProceeding will uninstall both installations.</Text>
+				</CurrentInstallParameters>
+
+				<Settings Condition="[CUSTOMIZE]==1">
+					<Field x="230" y="65" Type="Directory" Label="License server directory:" ValidationVariable="DIRECTORY_VALID">STDROOT</Field>
+					<Field x="230" Condition="'[OLS_ACTIVATION_CERT]'=='not_found',[GUI_INSTALL]!=0" Type="CheckBox" Label="Activate during installation" Description="Activates the License server during the installation">RUN_ACTIVATION</Field>
+
+					<Text x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText" Condition="[GUI_INSTALL]==1,[DIRECTORY_VALID]==0">Directory field is empty!</Text>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">&amp;Cancel</Button>
+					<Button x="110" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="[CUSTOMIZE]='0'" DialogShift="-1">&amp;Back</Button>
+					<Button x="190" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Action="Help">&amp;Help</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" Default="1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Install Now</Button>
+					<Text Condition="[PREVIOUSINSTALLATION]==1,[LEGACY_INSTALLATION]==0,[GUI_INSTALL]==1" x="220" y="49" w="-200" h="30" HAlign="left" VAlign="bottom">Previous installation was detected.\nProceeding will uninstall previous installation.</Text>
+					<Text Condition="[PREVIOUSINSTALLATION]==0,[LEGACY_INSTALLATION]==1,[GUI_INSTALL]==1" x="220" y="49" w="-200" h="30" HAlign="left" VAlign="bottom">Installation of old products was detected.\nProceeding will uninstall old version.</Text>
+					<Text Condition="[PREVIOUSINSTALLATION]==1,[LEGACY_INSTALLATION]==1,[GUI_INSTALL]==1" x="220" y="49" w="-200" h="30" HAlign="left" VAlign="bottom">Previous installation and old server were detected.\nProceeding will uninstall both installations.</Text>
+				</Settings>
+
+				<RunningApps>
+					<Text Condition="[DLG_CONDITION]==0" Name="Warning" x="230" y="65" w="-10" h="20" HAlign="left" VAlign="top" FgColour="Group:WarningText">The installer has detected that the following applications are running.</Text>
+					<Text Condition="[DLG_CONDITION]==0" Name="Warning" x="230" y="85" w="-10" h="20" HAlign="left" VAlign="top" FgColour="Group:WarningText">Please close these applications to continue.</Text>
+					<List Condition="[DLG_CONDITION]==0" Name="Destfilelist" x="230" y="110" w="-10" h="-80" HAlign="left" VAlign="top">Filelist</List>
+					<Text Condition="[DLG_CONDITION]==1" Name="Warning" x="230" y="65" w="-10" h="20" HAlign="left" VAlign="top">You can safely continue with the installation by clicking &quot;Install Now&quot;</Text>
+					<TerminateSequence>UnregisterVROLServiceSequence</TerminateSequence>
+
+					<TerminateApp>vrlservice.bin</TerminateApp>
+					<TerminateApp>vrol.bin</TerminateApp>
+
+					<TestApp>vrlservice.bin</TestApp>
+					<TestApp>vrol.bin</TestApp>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" Default="1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Install Now</Button>
+				</RunningApps>
+
+				<Uninstall Condition="[PREVIOUSINSTALLATION]==1;[LEGACY_INSTALLATION]==1" Special="AutoNext" Retain="Destfilelist">
+					<Progress Name="Overall" x="225" y="99" w="-10" h="20" VAlign="bottom">Overall</Progress>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110">Filelist</List>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Disableable="1" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Install Now</Button>
+				</Uninstall>
+
+				<UninstallationError Condition="[UNINSTALL_ERROR]==1" Retain="Destfilelist">
+					<Text x="230" y="99" w="-10" h="18" FgColour="Group:WarningText" HAlign="left" VAlign="bottom">The installer encountered errors during uninstallation. Please, choose further action.</Text>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110">Filelist</List>
+					<Field x="0" y="0" Condition="[GUI_INSTALL]==0" Type="CheckBox" Label="Undo uninstallation?">REVERT_UNINSTALL</Field>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" DialogShift="+1" Action="[REVERT_UNINSTALL]='0'">&amp;Ignore</Button>
+					<Button Condition="[PREVIOUSINSTALLATION]!=0" x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1" Action="[REVERT_UNINSTALL]='1'">&amp;Undo</Button>
+					<Button Condition="[PREVIOUSINSTALLATION]==0" x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1" Action="[CANCEL_INSTALLATION]='1'">&amp;Cancel</Button>
+				</UninstallationError>
+
+				<RevertUninstallation Special="AutoNext" Condition="[UNINSTALL_ERROR]==1,[REVERT_UNINSTALL]==1" Retain="Destfilelist">
+					<Progress Name="Overall" x="225" y="99" w="-10" h="20" VAlign="bottom">Overall</Progress>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110">Filelist</List>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Disableable="1" DialogShift="+1">&amp;Ignore</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1">&amp;Undo</Button>
+				</RevertUninstallation>
+
+				<UninstallBadFinish Special="Finish" Condition="[UNINSTALL_ERROR]==1,([REVERT_UNINSTALL]==1;[CANCEL_INSTALLATION]==1)">
+					<Text x="225" y="65" w="-20" h="18" HAlign="left" VAlign="top">The installation DID NOT complete properly.</Text>
+					<List Name="Destfilelist" x="225" y="85" w="-10" h="-80">Filelist</List>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Finish</Button>
+				</UninstallBadFinish>
+				<CopyProgress Special="AutoNext" Retain="Destfilelist">
+					<Progress Name="Overall" x="225" y="99" w="-10" h="20" VAlign="bottom">Overall</Progress>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110">Filelist</List>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Disableable="1" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Install Now</Button>
+				</CopyProgress>
+
+				<InstallationError Condition="[INSTALL_ERROR]==1" Retain="Destfilelist">
+					<Text x="230" y="99" w="-10" h="18" FgColour="Group:WarningText" HAlign="left" VAlign="bottom">The installer encountered errors during installation. Please, choose further action.</Text>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110">Filelist</List>
+					<Field x="0" y="0" Condition="[GUI_INSTALL]==0" Type="CheckBox" Label="Undo installation and restore previous installation?">REVERT_INSTALL</Field>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" DialogShift="+1" Action="[REVERT_INSTALL]='0'">&amp;Ignore</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1" Action="[REVERT_INSTALL]='1'">&amp;Undo</Button>
+				</InstallationError>
+
+				<RevertInstallation Special="AutoNext" Condition="[INSTALL_ERROR]==1,[REVERT_INSTALL]==1" Retain="Destfilelist">
+					<Progress Name="Overall" x="225" y="99" w="-10" h="20" VAlign="bottom">Overall</Progress>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110">Filelist</List>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Disableable="1" DialogShift="+1">&amp;Ignore</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1">&amp;Undo</Button>
+				</RevertInstallation>
+
+				<RegisterApplication Special="AutoNext" Condition="[INSTALL_ERROR]==0;[REVERT_INSTALL]==0" Retain="Destfilelist">
+				</RegisterApplication>
+
+				<ActivationQuery Condition="'[OLS_ACTIVATION_CERT]'=='not_found',[GUI_INSTALL]!=0,[RUN_ACTIVATION]!=0" Retain="Destfilelist">
+					<Trigger EvaluateOn="Set" Variable="SHOWDETAILS" Value="0"/>
+					<Text x="230" y="65" w="-10" h="20" HAlign="left">Please enter your login and password to activate your online license server installation.</Text>
+					<Text x="230" y="85" w="-10" h="20" HAlign="left">Or click 'Skip' to activate later.</Text>
+					<Field x="230" y="105" Type="EditBox"  Label="User Name:" ValidationVariable="USERNAME_VALID">ACTIVATE_USERNAME</Field>
+					<Field x="230"         Type="Password" Label="Password:"  ValidationVariable="PASSWORD_VALID">ACTIVATE_PASSWORD</Field>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110" Condition="[SHOWDETAILS]==1">Filelist</List>
+					<Text Condition="[USERNAME_VALID]==0,[PASSWORD_VALID]!=0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">User Name is required</Text>
+					<Text Condition="[USERNAME_VALID]!=0,[PASSWORD_VALID]==0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">Password is required</Text>
+					<Text Condition="[USERNAME_VALID]==0,[PASSWORD_VALID]==0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">User Name and password are required</Text>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" Default="1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Activate</Button>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" DialogShift="+1" Action="[RUN_ACTIVATION]='0'">&amp;Skip</Button>
+					<Button x="190" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Action="Help">&amp;Help</Button>
+				</ActivationQuery>
+
+				<ActivationDialog Special="AutoNext;Busy" Condition="'[OLS_ACTIVATION_CERT]'=='not_found',[GUI_INSTALL]!=0,[RUN_ACTIVATION]!=0" AutoCondition="[ACTIVATION_ERROR]!=5,[ACTIVATION_ERROR]!=6" Retain="Destfilelist">
+					<Text  Condition="[ACTIVATION_ERROR]==99;[ACTIVATION_RUNNING]!=0" x="230" y="65" w="-10" h="20" HAlign="left">Activating License Server. Please wait...</Text>
+					<Text  Condition="[ACTIVATION_ERROR]==5,[ACTIVATION_RUNNING]==0"  x="230" y="65" w="-10" h="20" HAlign="left">Invalid user name or password entered. Please try again or activate later.</Text>
+					<Text  Condition="[ACTIVATION_ERROR]==6,[ACTIVATION_RUNNING]==0"  x="230" y="65" w="-10" h="20" HAlign="left">License server has not yet started. Please try again in a few seconds.</Text>
+					<Text  Condition="[ACTIVATION_ERROR]==0,[ACTIVATION_RUNNING]==0"  x="230" y="65" w="-10" h="20" HAlign="left">Activation was successfull. You may continue with installation.</Text>
+					<Text  Condition="[ACTIVATION_ERROR]!=0,[ACTIVATION_ERROR]!=5,[ACTIVATION_ERROR]!=6,[ACTIVATION_ERROR]!=99,[ACTIVATION_RUNNING]==0" x="230" y="65" w="-10" h="20" HAlign="left">Unknown error occurred during activation. Please activate manually.</Text>
+					<Field Condition="[ACTIVATION_ERROR]==5;[ACTIVATION_ERROR]==6"  x="230" y="105" Type="EditBox"  Label="User Name:" ValidationVariable="USERNAME_VALID">ACTIVATE_USERNAME</Field>
+					<Field Condition="[ACTIVATION_ERROR]==5;[ACTIVATION_ERROR]==6"  x="230"         Type="Password" Label="Password:"  ValidationVariable="PASSWORD_VALID">ACTIVATE_PASSWORD</Field>
+					<Text Condition="[USERNAME_VALID]==0,[PASSWORD_VALID]!=0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">User Name is required</Text>
+					<Text Condition="[USERNAME_VALID]!=0,[PASSWORD_VALID]==0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">Password is required</Text>
+					<Text Condition="[USERNAME_VALID]==0,[PASSWORD_VALID]==0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">User Name and password are required</Text>
+					<Button x="100" y="110" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" Action="[ACTIVATION_RUNNING]='1';[LOGIN_RETRIES]='0';EvalTriggers" Condition="[ACTIVATION_ERROR]==5;[ACTIVATION_ERROR]==6" EnableCondition="[ACTIVATION_RUNNING]==0">&amp;Retry</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1" Default="1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg" EnableCondition="[ACTIVATION_RUNNING]==0">&amp;Finish</Button>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">&amp;Cancel</Button>
+					<Button x="190" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Action="Help">&amp;Help</Button>
+
+					<Trigger EvaluateOn="Set" Variable="ACTIVATION_RUNNING" Value="1"/>
+					<Trigger EvaluateOn="Button" Type="UI" Value="update"/>
+					<Trigger EvaluateOn="DlgEval;Button" Type="RunActions" Value="ActivateOLS"/>
+					<Trigger EvaluateOn="DlgEval;Button" Variable="ACTIVATION_RUNNING" Value="0"/>
+					<Trigger EvaluateOn="DlgEval;Button" Type="UI" Value="update"/>
+					<Trigger EvaluateOn="End" Type="FileCheck" Variable="OLS_ACTIVATION_CERT" Value="[OLS_CONFIG_DIR]/ssl/cert.crt"/>
+				</ActivationDialog>
+
+				<Finish Condition="[INSTALL_ERROR]==0;[REVERT_INSTALL]==0">
+					<Trigger EvaluateOn="Set" Variable="SHOWDETAILS" Value="0"/>
+					<Text x="225" y="65" w="-20" h="18" HAlign="left" VAlign="top" Condition="[SHOWDETAILS]==0">The installation process has finished successfully.</Text>
+					<Text x="225" y="83" w="-20" h="18" Condition="[SHOWDETAILS]==0;[GUI_INSTALL]==0">Any questions or comments send to support@chaosgroup.com.</Text>
+					<List Name="Destfilelist" x="225" y="65" w="-10" h="-110" Condition="[SHOWDETAILS]==1">Filelist</List>
+					<Text Condition="[RUN_ACTIVATION]!=0,[ACTIVATION_ERROR]!=0" x="230" y="96" w="-110" h="20" HAlign="left" VAlign="bottom" FgColour="Group:WarningText">Activation Failed! Please activate manually.</Text>
+					<Button x="100" y="100" w="80" h="18" HAlign="right" VAlign="bottom" Condition="[SHOWDETAILS]==0" Action="[SHOWDETAILS]='1'" LinkStyle="1">&amp;Show Details</Button>
+					<Button x="100" y="100" w="80" h="18" HAlign="right" VAlign="bottom" Condition="[SHOWDETAILS]==1" Action="[SHOWDETAILS]='0'" LinkStyle="1">&amp;Hide Details</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Finish</Button>
+				</Finish>
+
+				<PostInstall Condition="[INSTALL_ERROR]==0;[REVERT_INSTALL]==0" Special="AutoNext;Finish">
+				</PostInstall>
+
+				<BadFinish Condition="[INSTALL_ERROR]==1,[REVERT_INSTALL]==1" Special="Finish">
+					<Trigger EvaluateOn="Set" Variable="SHOWDETAILS" Value="1"/>
+					<Text x="225" y="65" w="-20" h="18" HAlign="left" VAlign="top">The installation DID NOT complete properly.</Text>
+					<List Name="Destfilelist" x="225" y="85" w="-10" h="-80">Filelist</List>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1" FgColour="Group:SpecialButtonFg" BkgColour="Group:SpecialButtonBkg" ActiveBkgColour="Group:SpecialButtonActiveBkg">&amp;Finish</Button>
+				</BadFinish>
+			</SubDialogs>
+		</InstallationDialog>
+	</Dialogs>
+
+	<UninstallDialogs>
+		<Welcome  w="750" h="521">
+			<Text x="10" y="15" w="-10" h="100" HAlign="left" VAlign="top" Condition="[GUI_INSTALL]==1">Click &quot;Uninstall&quot; to uninstall V-Ray Online License Server</Text>
+			<Text x="10" y="106" w="-10" h="30" HAlign="left" VAlign="bottom">All the registered trademarks and copyrights belong to their respective owners.\nV-Ray is a registered trademark of Chaos Software Ltd. in Bulgaria and/or other countries</Text>
+			<HLine x="1" y="70" w="-1" h="1" VAlign="bottom"></HLine>
+			<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">&amp;Cancel</Button>
+			<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1">&amp;Uninstall</Button>
+		</Welcome>
+
+		<UninstallationDialog Special="HasSubDialogs" w="750" h="521">
+			<TaskLB Name="TaskList" x="10" y="10" w="200" h="-85" HAlign="left" VAlign="top" Details="size=18"></TaskLB>
+			<HLine x="1" y="70" w="-1" h="1" VAlign="bottom"></HLine>
+			<TaskList>
+				<PreUninstall FinishLabel="Uninstall prepared" CurrentLabel="Uninstall preparation..."/>
+				<RunningApps FinishLabel="Checked for running applications" CurrentLabel="Checking for running applications"/>
+				<CopyProgress FinishLabel="License server uninstalled" CurrentLabel="License server uninstalling..." UnreachedLabel="License server uninstall"/>
+				<UnregisterApplication FinishLabel="Application unregistered" CurrentLabel="Application unregister"/>
+				<Finish CurrentLabel="Uninstallation finished"/>
+				<BadFinish ShowCondition="0"/>
+			</TaskList>
+
+			<SubDialogs>
+				<PreUninstall Special="AutoNext;Busy">
+					<Text Name="Info" x="220" y="10" w="-20" h="35" HAlign="left" VAlign="top">Running pre-uninstallation tasks...</Text>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Disableable="1" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1">&amp;Uninstall</Button>
+				</PreUninstall>
+
+				<RunningApps>
+					<Text Condition="[DLG_CONDITION]==0" Name="Warning" x="225" y="20" w="-10" h="20" HAlign="left" VAlign="top" FgColour="Group:WarningText">The uninstaller has detected that the following applications are running.</Text>
+					<Text Condition="[DLG_CONDITION]==0" Name="Warning" x="225" y="40" w="-10" h="20" HAlign="left" VAlign="top" FgColour="Group:WarningText">Please close these applications to continue.</Text>
+					<List Condition="[DLG_CONDITION]==0" Name="Destfilelist" x="225" y="65" w="-10" h="-85" HAlign="left" VAlign="top">Filelist</List>
+					<Text Condition="[DLG_CONDITION]==1" Name="Warning" x="225" y="20" w="-10" h="20" HAlign="left" VAlign="top">You can safely continue with the uninstallation by clicking &quot;Uninstall&quot;</Text>
+
+					<TerminateApp>vrol.bin</TerminateApp>
+
+					<TestApp>vrol.bin</TestApp>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" Default="1" DialogShift="+1">&amp;Uninstall</Button>
+				</RunningApps>
+
+				<CopyProgress Special="AutoNext" Retain="Destfilelist">
+					<Progress Name="Overall" x="220" y="11" w="-120" h="20">Overall</Progress>
+					<List Name="Destfilelist" x="220" y="45" w="-10" h="-85" HAlign="left" VAlign="top" Condition="[SHOWDETAILS]==1">Filelist</List>
+					<Button x="110" y="10" w="80" h="18" HAlign="right" Valign="top" Default="1" Condition="[SHOWDETAILS]==0" Action="[SHOWDETAILS]='1'" LinkStyle="1">&amp;Show Details</Button>
+					<Button x="110" y="10" w="80" h="18" HAlign="right" Valign="top" Default="1" Condition="[SHOWDETAILS]==1" Action="[SHOWDETAILS]='0'" LinkStyle="1">&amp;Hide Details</Button>
+					<Button x="20" y="50" w="80" h="30" HAlign="left" VAlign="bottom" Disableable="1" Action="Cancel">&amp;Cancel</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Disableable="1" DialogShift="+1">&amp;Uninstall</Button>
+					<Trigger EvaluateOn="End" Condition="[UNINSTALL_ERROR]!=0" Variable="SHOWDETAILS" Value="1"/>
+				</CopyProgress>
+
+				<UnregisterApplication Special="AutoNext" Retain="Destfilelist">
+				</UnregisterApplication>
+
+				<Finish Condition="[UNINSTALL_ERROR]==0" Special="Finish">
+					<Trigger EvaluateOn="Set" Variable="SHOWDETAILS" Value="0"/>
+					<Text x="220" y="10" w="-110" h="31" HAlign="left" VAlign="top">The uninstall process has finished successfully.\nAny questions or comments send to support@chaosgroup.com.</Text>
+					<CopyrightText>All the registered trademarks and copyrights belong to their respective owners.</CopyrightText>
+					<List Name="Destfilelist" x="220" y="45" w="-10" h="-85" HAlign="left" VAlign="top" Condition="[SHOWDETAILS]==1">Filelist</List>
+					<Button x="110" y="10" w="80" h="18" HAlign="right" Valign="top" Condition="[SHOWDETAILS]==0" Action="[SHOWDETAILS]='1'" LinkStyle="1">&amp;Show Details</Button>
+					<Button x="110" y="10" w="80" h="18" HAlign="right" Valign="top" Condition="[SHOWDETAILS]==1" Action="[SHOWDETAILS]='0'" LinkStyle="1">&amp;Hide Details</Button>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1">&amp;Finish</Button>
+				</Finish>
+
+				<BadFinish Condition="[UNINSTALL_ERROR]==1" Special="Finish">
+					<Text x="220" y="10" w="-110" h="31" HAlign="left" VAlign="top">The uninstall DID NOT complete properly.\nSome files may have remained on your system. You will have to remove these manually.</Text>
+					<CopyrightText>All the registered trademarks and copyrights belong to their respective owners.</CopyrightText>
+					<List Name="Destfilelist" x="220" y="45" w="-10" h="-85" HAlign="left" VAlign="top">Filelist</List>
+					<Button x="100" y="50" w="80" h="30" HAlign="right" VAlign="bottom" Default="1" DialogShift="+1">&amp;Finish</Button>
+				</BadFinish>
+			</SubDialogs>
+		</UninstallationDialog>
+	</UninstallDialogs>
+
+	<ColourTheme>
+		<DialogBackground>0x2a2a2a</DialogBackground>
+		<ListBackground>0x474747</ListBackground>
+		<StaticElements>0x474747</StaticElements>
+		<InputBoxText>0x2e2e2e</InputBoxText>
+		<InputBoxBackground>0xc3c3c3</InputBoxBackground>
+
+		<FieldBackground Condition="'[WX_PORT]'=='linux_gtk'">0x474747</FieldBackground>
+
+		<InvalidFieldBackground>0xecca99</InvalidFieldBackground>
+		<InvalidFieldForeground>0xe17400</InvalidFieldForeground>
+		<ProgressBarForeground>0x878787</ProgressBarForeground>
+		<ProgressBarBackground>0x050505</ProgressBarBackground>
+		<LinkButtons>0xb7b7b7</LinkButtons>
+		<ButtonsText>0xb7b7b7</ButtonsText>
+		<ButtonsBackground>0x474747</ButtonsBackground>
+		<ActiveButtonsBackground>0x6a6a6a</ActiveButtonsBackground>
+		<ActiveText>0xbfbfbf</ActiveText>
+		<InactiveText>0x767676</InactiveText>
+		<HighlightedText>0xe84d00</HighlightedText>
+		<CustomGroup Name="WarningText">0xe84d00</CustomGroup>
+		<CustomGroup Name="SpecialButtonFg">0x2e2e2e</CustomGroup>
+		<CustomGroup Name="SpecialButtonBkg">0xcecece</CustomGroup>
+		<CustomGroup Name="SpecialButtonActiveBkg">0xffffff</CustomGroup>
+	</ColourTheme>
+
+	<Installation>
+		<Uninstall>
+			<InstallLogFile>[STDROOT]/uninstall/install.log</InstallLogFile>
+			<InstallBackupFile>[STDROOT]/uninstall/backup.bin</InstallBackupFile>
+			<UninstallCmd>[STDROOT]/uninstall/installer</UninstallCmd>
+			<UninstallXmlFile>[STDROOT]/uninstall/vrol_install.xml</UninstallXmlFile>
+		</Uninstall>
+
+		<DefValues>
+
+			<Value Name="STDROOT" UseOld="1" DataType="value">/usr/ChaosGroup/VRLService/OLS</Value>
+			<Value Name="OLS_HOME" UseOld="0" DataType="envvar" Default="undefined">CHAOS_INSTALL_ORIGINAL_HOME</Value>
+			<Trigger Condition="'[OLS_HOME]'=='undefined'" Variable="OLS_HOME" Value="[$HOME]"/>
+			<Value Name="OLS_CONFIG_DIR" UseOld="0" DataType="value" Recalculate="1">$OLS_HOME/.ChaosGroup</Value>
+
+			<Value Name="REG_LIC_SERVER" UseOld="0" DataType="value">1</Value>
+
+			<Value Name="CUSTOMIZE" Condition="[GUI_INSTALL]==1" UseOld="0" DataType="value">0</Value>
+			<Value Name="CUSTOMIZE" Condition="[GUI_INSTALL]==0" UseOld="0" DataType="value">1</Value>
+			<Value Name="PREVIOUSINSTALLATION" UseOld="1" DataType="value">0</Value>
+			<Value Name="LEGACY_INSTALLATION" UseOld="0" DataType="value">0</Value>
+			<Value Name="SHOWDETAILS" UseOld="0" DataType="value">0</Value>
+			<Value Name="SHOULDUNINSTALL" UseOld="0" DataType="value">1</Value>
+
+			<Value Name="INSTALL_ERROR" UseOld="0" DataType="value">0</Value>
+			<Value Name="UNINSTALL_ERROR" UseOld="0" DataType="value">0</Value>
+			<Value Name="REVERT_INSTALL" UseOld="0" DataType="value">1</Value>
+			<Value Name="REVERT_UNINSTALL" UseOld="0" DataType="value">0</Value>
+			<Value Name="CANCEL_INSTALLATION" UseOld="0" DataType="value">0</Value>
+
+			<Value Name="OLS_ACTIVATION_CERT" UseOld="0" DataType="value" Default="not_found">not_found</Value>
+			<Value Name="RUN_ACTIVATION"      UseOld="0" DataType="value">1</Value>
+			<Value Name="ACTIVATE_USERNAME"   UseOld="1" DataType="value"/>
+			<Value Name="ACTIVATE_PASSWORD"   UseOld="0" DataType="value"/>
+			<Value Name="ACTIVATION_ERROR"    UseOld="0" DataType="value">99</Value>
+			<Value Name="ACTIVATION_RUNNING"  UseOld="0" DataType="value">0</Value>
+			<Value Name="LOGIN_RETRIES"       UseOld="0" DataType="value">3</Value>
+		</DefValues>
+
+		<InstallerControlVariables>
+			<PreviousInstallation>PREVIOUSINSTALLATION</PreviousInstallation>
+			<LegacyInstallation>LEGACY_INSTALLATION</LegacyInstallation>
+			<ShouldUninstall>SHOULDUNINSTALL</ShouldUninstall>
+			<CustomizeSettings>CUSTOMIZE</CustomizeSettings>
+			<ProgressDetails>SHOWDETAILS</ProgressDetails>
+			<InstallError>INSTALL_ERROR</InstallError>
+			<UninstallError>UNINSTALL_ERROR</UninstallError>
+			<DlgCondition>DLG_CONDITION</DlgCondition>
+		</InstallerControlVariables>
+
+		<InstallerExcludeVariables>
+			<Variable>SHOULDUNINSTALL</Variable>
+			<Variable>CANCEL_INSTALLATION</Variable>
+
+			<Variable>OLS_HOME</Variable>
+			<Variable>OLS_ACTIVATION_CERT</Variable>
+			<Variable>OLS_CONFIG_DIR</Variable>
+			<Variable>ACTIVATE_PASSWORD</Variable>
+			<Variable>ACTIVATION_ERROR</Variable>
+			<Variable>ACTIVATION_RUNNING</Variable>
+		</InstallerExcludeVariables>
+		<FileSet name="Uninstaller">
+			<Desc>Uninstaller for License server</Desc>
+			<FN Dest="[STDROOT]/uninstall">install_tools/backup.bin</FN>
+			<FN Dest="[STDROOT]/uninstall" Executable="1" StripExeExt="1">install_tools/installer.bin</FN>
+			<FN Dest="[STDROOT]/uninstall" Executable="1" StripExeExt="1">install_tools/uninstaller.bin</FN>
+			<FN Dest="[STDROOT]/uninstall">install_tools/install.log</FN>
+			<FN Dest="[STDROOT]/uninstall">vrol_install.xml</FN>
+		</FileSet>
+
+		<FileSet Name="GUI">
+			<FN Dest="[STDROOT]/uninstall/icons" Alias="icon_not_started">gui/icons/bullet.png</FN>
+			<FN Dest="[STDROOT]/uninstall/icons" Alias="icon_current">gui/icons/arrow.png</FN>
+			<FN Dest="[STDROOT]/uninstall/icons" Alias="icon_good_finish">gui/icons/tick.png</FN>
+			<FN Dest="[STDROOT]/uninstall/icons" Alias="icon_bad_finish">gui/icons/cross.png</FN>
+			<FN Dest="[STDROOT]/uninstall/icons" Alias="icon_inactive">gui/icons/bullet_unavailable.png</FN>
+
+			<FN Alias="WelcomeLImg">gui/first-screen.jpg</FN>
+			<FN Alias="Header">gui/header.jpg</FN>
+			<FN Dest="[STDROOT]/uninstall/icons" Alias="AppIcon">gui/icons/icon.png</FN>
+			<FN Dest="[STDROOT]/docs">docs/license_vrlservice.rtf</FN>
+			<FN Alias="LicenseText">docs/license_vrlservice.cgmd</FN>
+		</FileSet>
+
+		<FileSet name="OLS">
+			<Desc>License Server</Desc>
+<FN Dest="[STDROOT]" Executable="1">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/vrol.bin</FN>
+<FN Dest="[STDROOT]">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/vrol.nar</FN>
+<FN Dest="[STDROOT]/bin" Executable="1">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/bin/vrlservice.bin</FN>
+<FN Dest="[STDROOT]/node_modules/opn">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/opn/index.js</FN>
+<FN Dest="[STDROOT]/node_modules/opn">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/opn/xdg-open</FN>
+<FN Dest="[STDROOT]/node_modules/opn/node_modules/object-assign">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/opn/node_modules/object-assign/index.js</FN>
+<FN Dest="[STDROOT]/node_modules/os-service">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/os-service/index.js</FN>
+<FN Dest="[STDROOT]/node_modules/os-service/build/Release">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/os-service/build/Release/service.node</FN>
+<FN Dest="[STDROOT]/node_modules/proxydetect">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/proxydetect/index.js</FN>
+<FN Dest="[STDROOT]/node_modules/proxydetect">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/proxydetect/proxydetect.node</FN>
+<FN Dest="[STDROOT]/node_modules/vrloffline-linux">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/node_modules/vrloffline-linux/vrloffline.node</FN>
+<FN Dest="[STDROOT]/startup_scripts">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/startup_scripts/registerLicenseServerAsService</FN>
+<FN Dest="[STDROOT]/startup_scripts">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/startup_scripts/unregisterLicenseServerAsService</FN>
+<FN Dest="[STDROOT]/startup_scripts">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/startup_scripts/vrlctl</FN>
+<FN Dest="[STDROOT]/startup_scripts">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/startup_scripts/vrlservice.conf</FN>
+<FN Dest="[STDROOT]/startup_scripts">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/startup_scripts/vrlservice.service</FN>
+<FN Dest="[STDROOT]/startup_scripts">/home/gitlab-runner/builds/38e13da0/0/vrl/licensing_flp/build/startup_scripts/vrlsvcctl</FN>
+		</FileSet>
+
+		<FileSet Name="LicenseFiles">
+			<FN Dest="[STDROOT]/docs">docs/license_vrlservice.rtf</FN>
+			<FN Dest="[STDROOT]/bin" ExpandVarsInFile="1"               >startup_scripts/vrlservice.service</FN>
+			<FN Dest="[STDROOT]/bin" ExpandVarsInFile="1"               >startup_scripts/vrlservice.conf</FN>
+			<FN Dest="[STDROOT]/bin" ExpandVarsInFile="1" Executable="1">startup_scripts/vrlsvcctl</FN>
+			<FN Dest="[STDROOT]/bin" ExpandVarsInFile="1" Executable="1">startup_scripts/registerLicenseServerAsService</FN>
+			<FN Dest="[STDROOT]/bin" ExpandVarsInFile="1" Executable="1" Alias="UnregisterVROLScript">startup_scripts/unregisterLicenseServerAsService</FN>
+			<FN Dest="[STDROOT]/" ExpandVarsInFile="1" Executable="1">startup_scripts/vrlctl</FN>
+			<FN Dest="[STDROOT]/node_modules/opn" ExpandVarsInFile="1" Executable="1">node_modules/opn/xdg-open</FN>
+
+		</FileSet>
+		<UnregisterVROLServiceSequence>
+			<CreateFile Dest="[TEMP_DIR]" ExpandVarsInFile="1" FileMod="0755">UnregisterVROLScript</CreateFile>
+	
+			<RunProgram Wait="1" AsRoot="1" Asynchronous="1">[TEMP_DIR]/unregisterLicenseServerAsService</RunProgram>
+			<RemoveFile>[TEMP_DIR]/unregisterLicenseServerAsService</RemoveFile>
+		</UnregisterVROLServiceSequence>
+		<Environment>
+		</Environment>
+
+		<Firewall>
+
+		</Firewall>
+
+		<Shortcuts>
+			<Add Type="Uninstall" Dest="[STDROOT]/uninstall" Target="[STDROOT]/uninstall/installer" StartPath="[STDROOT]/uninstall" Arguments="-uninstallApp=&quot;V-Ray Online License Server&quot; -log=&quot;[STDROOT]/uninstall/install.log&quot;">Uninstall</Add>
+		</Shortcuts>
+
+		<AdditionalInstall>
+			<RunProgram Condition="[REG_LIC_SERVER]==1" Wait="1" AsRoot="1" Asynchronous="1" >[STDROOT]/bin/registerLicenseServerAsService</RunProgram>
+
+		</AdditionalInstall>
+
+		<ActivateOLS>
+			<!-- Deactivate old activations prior activation -->
+			<RunProgram Condition="'[OLS_ACTIVATION_CERT]'!='not_found'"
+			            Arguments="&quot;[STDROOT]/vrol.nar/vrlctl.js&quot; --ols_home &quot;[OLS_HOME]&quot; online disable"
+			            Wait="1" Asynchronous="1">[STDROOT]/vrol.bin</RunProgram>
+			<RunProgram Arguments="&quot;[STDROOT]/vrol.nar/vrlctl.js&quot; --ols_home &quot;[OLS_HOME]&quot; online login &quot;[ACTIVATE_USERNAME]&quot; &quot;[ACTIVATE_PASSWORD]&quot; --retries=[LOGIN_RETRIES]"
+			            ResultVariable="ACTIVATION_ERROR"
+			            Wait="1" Asynchronous="1" Details="LessDebug">[STDROOT]/vrol.bin</RunProgram>
+		</ActivateOLS>
+
+		<PostInstall>
+			<CopyFile Dest="[STDROOT]/uninstall/installer">[INSTALLER_DIR]/installer.bin</CopyFile>
+			<CopyFile Dest="[STDROOT]/uninstall/uninstaller">[INSTALLER_DIR]/uninstaller.bin</CopyFile>
+			<ChangeOwner Dest="[$CHAOS_INSTALL_ORIGINAL_HOME]/.ChaosGroup">[$CHAOS_INSTALL_ORIGINAL_UID];[$CHAOS_INSTALL_ORIGINAL_GID]</ChangeOwner>
+
+			<RunProgram Condition="[GUI_INSTALL]!=0,([RUN_ACTIVATION]==0;[ACTIVATION_ERROR]!=0),'[OLS_ACTIVATION_CERT]'=='not_found'"
+			            Arguments="&quot;[STDROOT]/vrol.nar/vrlctl.js&quot; browser --ols_home &quot;[OLS_HOME]&quot;"
+			            Wait="1">[STDROOT]/vrol.bin</RunProgram>
+		</PostInstall>
+
+		<PreUninstall>
+			<RunProgram Condition="[REG_LIC_SERVER]==1" Wait="1" AsRoot="1" Asynchronous="1">[STDROOT]/bin/unregisterLicenseServerAsService</RunProgram>
+
+		</PreUninstall>
+	</Installation>
+</ChaosGroupInstallation>
+

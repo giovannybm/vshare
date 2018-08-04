@@ -1,0 +1,80 @@
+#!/bin/bash
+
+VROL_NAME="V-Ray Online License Server"
+
+INIT_DAEMON=$(ps -p 1 -o comm | sed -n 2p)
+if [ "$INIT_DAEMON" = "init" ]; then
+	if [ $(initctl --version | grep -q upstart) ]; then
+		# Init system is SystemV
+		if [ -w "/etc/init.d" ]; then
+
+			echo "Registering the $VROL_NAME as service"
+			echo "Configuration & log files will be located in [$CHAOS_INSTALL_ORIGINAL_HOME]/.ChaosGroup"
+
+			#Copy the deamon script to the init daemons
+			cp "[STDROOT]/bin/vrlsvcctl" /etc/init.d/vrlsvcctl
+
+			#Make symlinks for rc
+			ln -s /etc/init.d/vrlsvcctl /etc/rc0.d/K55vrlservice
+			ln -s /etc/init.d/vrlsvcctl /etc/rc1.d/K55vrlservice
+			ln -s /etc/init.d/vrlsvcctl /etc/rc2.d/S55vrlservice
+			ln -s /etc/init.d/vrlsvcctl /etc/rc3.d/S55vrlservice
+			ln -s /etc/init.d/vrlsvcctl /etc/rc4.d/S55vrlservice
+			ln -s /etc/init.d/vrlsvcctl /etc/rc5.d/S55vrlservice
+			ln -s /etc/init.d/vrlsvcctl /etc/rc6.d/K55vrlservice
+
+			echo "Starting $VROL_NAME"
+			service vrlsvcctl start &
+
+			echo "$VROL_NAME started successfully"
+			exit 0
+
+		else
+			echo "You have to run the register script with 'sudo' or as root!"
+			exit 1
+		fi
+	else
+		# Init system is Upstart
+		if [ -w "/etc/init" ]; then
+
+			echo "Registering the $VROL_NAME as service"
+			echo "Configuration & log files will be located in [$CHAOS_INSTALL_ORIGINAL_HOME]/.ChaosGroup"
+
+			#Copy the deamon script to the init daemons
+			cp "[STDROOT]/bin/vrlservice.conf" /etc/init
+
+			echo "Starting $VROL_NAME"
+			sudo start vrlservice
+
+			echo "$VROL_NAME started successfully"
+			exit 0
+
+		else
+			echo "You have to run the register script with 'sudo' or as root!"
+			exit 1
+		fi
+	fi
+
+elif [ "$INIT_DAEMON" = "systemd" ]; then
+	if [ -w "/etc/systemd/system" ]; then
+		echo "Registering the $VROL_NAME as service"
+		echo "Configuration & log files will be located in [$CHAOS_INSTALL_ORIGINAL_HOME]/.ChaosGroup"
+		
+		#Copy the deamon configuration for systemd
+		cp "[STDROOT]/bin/vrlservice.service" /etc/systemd/system
+
+		#enable the service through the systemctl tool
+		systemctl enable vrlservice.service
+		systemctl start vrlservice.service
+
+		echo "$VROL_NAME started successfully"
+		exit 0
+	else
+		echo "You have to run the register script with 'sudo' or as root!"
+		exit 1
+	fi
+else
+
+	echo "ERROR: Unsupported init system! Unable to register the $VROL_NAME as service!"
+	exit 1
+fi

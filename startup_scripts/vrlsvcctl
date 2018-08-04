@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# vrlsvcctl - An init script for the vrlservice license server daemon
+#
+# Copyright (c) 2009 Chaos Software, Ltd.
+#
+# Version: 0.1 (7 Dec 2009)
+#
+### BEGIN INIT INFO
+# Provides:       vrlservice
+# Required-Start: $hotplug
+# Required-Stop:
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Description:  Starts up the V-Ray license service
+### END INIT INFO
+
+DAEMON="[STDROOT]/vrol.bin --daemon"
+NAME="V-Ray Online License server"
+
+StartService() {
+	echo "Starting $NAME..."
+
+	cd [STDROOT]
+
+	export OLS_HOME=[$CHAOS_INSTALL_ORIGINAL_HOME]
+	$DAEMON
+
+	echo "$NAME started as a daemon"
+}
+
+StopService() {
+	echo "Stopping $NAME..."
+	if killall -TERM vrol.bin > /dev/null 2> /dev/null; then
+		echo "done"
+	else
+		echo -n "retrying..."
+		sleep 5
+		killall -9 vrol.bin > /dev/null 2> /dev/null
+		echo "done"
+	fi
+}
+
+case "$1" in
+  start)
+	StartService
+	exit 0
+	  ;;
+  stop)
+	StopService
+	exit 0
+	  ;;
+  restart)
+	StopService
+	sleep 2
+	StartService
+	exit 0
+	  ;;
+  *)
+
+	echo "Usage: /etc/init.d/vrlsvcctl {start|stop|restart}"
+	exit 1
+	  ;;
+esac
+
+exit 0

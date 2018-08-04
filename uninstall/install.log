@@ -1,0 +1,62 @@
+/usr/ChaosGroup/VRLService/OLS/uninstall/vrol_install.xml
+/usr/ChaosGroup/VRLService/OLS/uninstall/backup.bin
+NUMVARS	11
+VAR	PREVIOUSINSTALLATION	1
+VAR	REG_LIC_SERVER	1
+VAR	LEGACY_INSTALLATION	0
+VAR	INSTALL_ERROR	0
+VAR	UNINSTALL_ERROR	0
+VAR	REVERT_INSTALL	1
+VAR	REVERT_UNINSTALL	0
+VAR	STDROOT	/usr/ChaosGroup/VRLService/OLS
+VAR	RUN_ACTIVATION	0
+VAR	LOGIN_RETRIES	3
+VAR	ACTIVATE_USERNAME	
+DIR	1	/usr/ChaosGroup/VRLService/OLS/uninstall/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/vrol_install.xml
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/install.log
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/uninstaller
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/installer
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/backup.bin
+DIR	1	/usr/ChaosGroup/VRLService/OLS/docs/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/docs/license_vrlservice.rtf
+DIR	1	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/icon.png
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/bullet_unavailable.png
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/cross.png
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/tick.png
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/arrow.png
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/uninstall/icons/bullet.png
+DIR	1	/usr/ChaosGroup/VRLService/OLS/startup_scripts/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/startup_scripts/vrlsvcctl
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/startup_scripts/vrlservice.service
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/startup_scripts/vrlservice.conf
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/startup_scripts/vrlctl
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/startup_scripts/unregisterLicenseServerAsService
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/startup_scripts/registerLicenseServerAsService
+DIR	2	/usr/ChaosGroup/VRLService/OLS/node_modules/vrloffline-linux/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/vrloffline-linux/vrloffline.node
+DIR	1	/usr/ChaosGroup/VRLService/OLS/node_modules/proxydetect/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/proxydetect/proxydetect.node
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/proxydetect/index.js
+DIR	3	/usr/ChaosGroup/VRLService/OLS/node_modules/os-service/build/Release/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/os-service/build/Release/service.node
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/os-service/index.js
+DIR	3	/usr/ChaosGroup/VRLService/OLS/node_modules/opn/node_modules/object-assign/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/opn/node_modules/object-assign/index.js
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/opn/xdg-open
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/opn/index.js
+DIR	1	/usr/ChaosGroup/VRLService/OLS/bin/
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/bin/vrlservice.bin
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/vrol.nar
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/vrol.bin
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/node_modules/opn/xdg-open
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/vrlctl
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/bin/unregisterLicenseServerAsService
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/bin/registerLicenseServerAsService
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/bin/vrlsvcctl
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/bin/vrlservice.conf
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/bin/vrlservice.service
+FILE	CREATE	/usr/ChaosGroup/VRLService/OLS/docs/license_vrlservice.rtf
+SHORTCUT	SHORTCUT	/usr/ChaosGroup/VRLService/OLS/uninstall/Uninstall
+
